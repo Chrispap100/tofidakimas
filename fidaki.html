@@ -3,20 +3,24 @@
 <html lang="el">
 <head>
   <meta charset="UTF-8">
-  <title>Φιδάκι 2 Παίκτες</title>
+  <title>Φιδάκι για 4 Παίκτες</title>
   <style>
-    body { font-family: Arial; text-align: center; background-color: #f0f0f0; }
+    body { font-family: Arial; text-align: center; background: #eaf6ff; }
     #board { display: grid; grid-template-columns: repeat(20, 35px); margin: 20px auto; direction: rtl; }
     .cell {
-      width: 35px; height: 35px; border: 1px solid #999;
+      width: 35px; height: 35px; border: 1px solid #ccc;
       display: flex; align-items: center; justify-content: center;
       font-size: 10px; position: relative;
+      background-color: #fdfdfd;
     }
-    .player1, .player2 {
-      width: 16px; height: 16px; border-radius: 50%; position: absolute;
+    .player1, .player2, .player3, .player4 {
+      width: 14px; height: 14px; border-radius: 50%; position: absolute;
     }
     .player1 { background: orange; top: 2px; left: 2px; }
-    .player2 { background: blue; bottom: 2px; right: 2px; }
+    .player2 { background: blue; top: 2px; right: 2px; }
+    .player3 { background: green; bottom: 2px; left: 2px; }
+    .player4 { background: red; bottom: 2px; right: 2px; }
+
     .snake::after {
       content: "🐍";
       position: absolute;
@@ -33,7 +37,7 @@
   </style>
 </head>
 <body>
-  <h1>🐍 Φιδάκι - Μέχρι το 500!</h1>
+  <h1>🐍 Φιδάκι - Έως 4 Παίκτες</h1>
   <div id="board"></div>
   <button onclick="rollDice()">🎲 Ρίξε το ζάρι</button>
   <button onclick="resetGame()">🔁 Ξεκίνα από την αρχή</button>
@@ -42,7 +46,8 @@
     const board = document.getElementById('board');
     const status = document.getElementById('status');
     const size = 500;
-    let positions = [0, 0];
+    const players = 4;
+    let positions = new Array(players).fill(0);
     let currentPlayer = 0;
 
     const snakes = { 488: 302, 410: 311, 357: 249, 276: 142, 230: 111 };
@@ -64,18 +69,16 @@
     function updateBoard() {
       for (let i = 0; i < size; i++) {
         const cell = document.getElementById('cell-' + i);
-        cell.innerText = i + 1;
-        cell.classList.remove('snake', 'ladder');
+        cell.innerHTML = (i + 1).toString();
         if (snakes[i]) cell.classList.add('snake');
         if (ladders[i]) cell.classList.add('ladder');
       }
-      const token1 = document.createElement('div');
-      token1.className = 'player1';
-      document.getElementById('cell-' + positions[0]).appendChild(token1);
 
-      const token2 = document.createElement('div');
-      token2.className = 'player2';
-      document.getElementById('cell-' + positions[1]).appendChild(token2);
+      positions.forEach((pos, idx) => {
+        const token = document.createElement('div');
+        token.className = 'player' + (idx + 1);
+        document.getElementById('cell-' + pos).appendChild(token);
+      });
     }
 
     function rollDice() {
@@ -97,12 +100,13 @@
         return;
       }
 
-      currentPlayer = 1 - currentPlayer;
-      status.innerText = `Έριξε: ${roll} – Τώρα παίζει ο Παίκτης ${currentPlayer + 1} (${currentPlayer === 0 ? '🟠' : '🔵'})`;
+      currentPlayer = (currentPlayer + 1) % players;
+      const colors = ["🟠", "🔵", "🟢", "🔴"];
+      status.innerText = `🎲 Έριξε: ${roll} – Τώρα παίζει ο Παίκτης ${currentPlayer + 1} (${colors[currentPlayer]})`;
     }
 
     function resetGame() {
-      positions = [0, 0];
+      positions = new Array(players).fill(0);
       currentPlayer = 0;
       createBoard();
       updateBoard();
