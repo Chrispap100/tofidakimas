@@ -1,29 +1,13 @@
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f0f8ff;
-  text-align: center;
-  padding: 20px;
-}
-h1 {
-  color: #2c3e50;
+  font-family: Arial; background: #f4f8fc; text-align: center; padding: 30px;
 }
 .grid-menu {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  padding: 30px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px; padding: 30px;
 }
 .game-tile {
-  background-color: #3498db;
-  color: white;
-  padding: 30px;
-  text-decoration: none;
-  border-radius: 15px;
-  font-size: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: background 0.3s ease;
-}
-.game-tile:hover {
-  background-color: #2980b9;
+  background-color: #2d98da; color: white; padding: 20px;
+  text-decoration: none; border-radius: 12px; font-size: 18px;
+  box-shadow: 0 5px 8px rgba(0,0,0,0.15);
 }
