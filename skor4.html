@@ -1,1 +1,85 @@
-<html><body><h1>🔴 Σκορ 4 - playable</h1></body></html>
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>Σκορ 4</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #fff0f5; }
+    #board { display: grid; grid-template-columns: repeat(7, 60px); gap: 4px; margin: 20px auto; }
+    .cell {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .R { background: red; }
+    .Y { background: yellow; }
+  </style>
+</head>
+<body>
+  <h1>🔴 Σκορ 4</h1>
+  <div id="board"></div>
+  <p id="status">Παίζει: 🔴</p>
+  <button onclick="resetGame()">Reset</button>
+  <script>
+    const columns = 7, rows = 6;
+    const board = [], container = document.getElementById("board");
+    let current = 'R';
+    function createBoard() {
+      container.innerHTML = '';
+      for (let r = 0; r < rows; r++) {
+        board[r] = [];
+        for (let c = 0; c < columns; c++) {
+          board[r][c] = '';
+          const div = document.createElement("div");
+          div.className = "cell";
+          div.dataset.row = r;
+          div.dataset.col = c;
+          div.onclick = () => placeDisc(c);
+          container.appendChild(div);
+        }
+      }
+    }
+    function placeDisc(col) {
+      for (let r = rows - 1; r >= 0; r--) {
+        if (board[r][col] === '') {
+          board[r][col] = current;
+          render();
+          if (checkWin(r, col)) {
+            document.getElementById("status").innerText = `🏆 Παίκτης ${current === 'R' ? '🔴' : '🟡'} νίκησε!`;
+            disableClicks(); return;
+          }
+          current = current === 'R' ? 'Y' : 'R';
+          document.getElementById("status").innerText = `Παίζει: ${current === 'R' ? '🔴' : '🟡'}`;
+          return;
+        }
+      }
+    }
+    function render() {
+      document.querySelectorAll(".cell").forEach(cell => {
+        const r = cell.dataset.row, c = cell.dataset.col;
+        cell.className = "cell " + (board[r][c] || '');
+      });
+    }
+    function checkWin(r, c) {
+      const color = board[r][c], dirs = [[0,1],[1,0],[1,1],[1,-1]];
+      return dirs.some(([dr, dc]) => {
+        let count = 1;
+        for (let i = 1; i < 4; i++) if (board[r+dr*i]?.[c+dc*i] === color) count++; else break;
+        for (let i = 1; i < 4; i++) if (board[r-dr*i]?.[c-dc*i] === color) count++; else break;
+        return count >= 4;
+      });
+    }
+    function disableClicks() {
+      document.querySelectorAll(".cell").forEach(c => c.onclick = null);
+    }
+    function resetGame() {
+      createBoard();
+      current = 'R';
+      document.getElementById("status").innerText = "Παίζει: 🔴";
+    }
+    createBoard();
+  </script>
+</body>
+</html>

@@ -1,1 +1,47 @@
-<html><body><h1>🐍 Φιδάκι - playable</h1></body></html>
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>Φιδάκι</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #e6f7ff; }
+    #board { display: grid; grid-template-columns: repeat(10, 50px); margin: 20px auto; gap: 2px; }
+    .cell { width: 50px; height: 50px; border: 1px solid #aaa; display: flex; align-items: center; justify-content: center; }
+    .player { background: red; color: white; border-radius: 50%; width: 30px; height: 30px; display: inline-block; line-height: 30px; }
+  </style>
+</head>
+<body>
+  <h1>🐍 Παίξε Φιδάκι!</h1>
+  <div id="board"></div>
+  <p>Θέση παίκτη: <span id="pos">1</span></p>
+  <button onclick="roll()">🎲 Ρίξε το ζάρι</button>
+  <script>
+    const board = document.getElementById("board");
+    let position = 1;
+    for (let i = 100; i >= 1; i--) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.id = "cell-" + i;
+      cell.innerText = i;
+      board.appendChild(cell);
+    }
+    function render() {
+      document.querySelectorAll(".cell .player").forEach(e => e.remove());
+      const token = document.createElement("div");
+      token.className = "player";
+      token.innerText = "1";
+      document.getElementById("cell-" + position).appendChild(token);
+      document.getElementById("pos").innerText = position;
+    }
+    function roll() {
+      const dice = Math.floor(Math.random() * 6) + 1;
+      position += dice;
+      if (position > 100) position = 100;
+      render();
+      if (position === 100) alert("🏆 Νίκησες!");
+    }
+    render();
+  </script>
+</body>
+</html>
